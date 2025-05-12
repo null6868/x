@@ -713,16 +713,74 @@
         }
         
         function setupBlowDetection() {
-            // Kiểm tra hỗ trợ
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                console.log('Trình duyệt không hỗ trợ getUserMedia');
-                // Nếu không hỗ trợ, cho phép nhấp để thổi nến
-                cake.addEventListener('click', function blowOnClick() {
+    // Kiểm tra hỗ trợ
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.log('Trình duyệt không hỗ trợ getUserMedia');
+        // Nếu không hỗ trợ, cho phép nhấp để thổi nến
+        cake.addEventListener('click', function blowOnClick() {
+            blowOutCandle();
+            cake.removeEventListener('click', blowOnClick);
+        });
+        return;
+    }
+    
+    // Yêu cầu quyền truy cập micro
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const analyser = audioContext.createAnalyser();
+            const microphone = audioContext.createMediaStreamSource(stream);
+            const javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+            
+            analyser.smoothingTimeConstant = 0.8;
+            analyser.fftSize = 2048; // Tăng kích thước FFT để có độ chính xác tốt hơn
+            
+            microphone.connect(analyser);
+            analyser.connect(javascriptNode);
+            javascriptNode.connect(audioContext.destination);
+            
+            javascriptNode.onaudioprocess = function() {
+                const array = new Uint8Array(analyser.frequencyBinCount);
+                analyser.getByteFrequencyData(array);
+                let values = 0;
+
+                const length = array.length;
+                for (let i = 0; i < length; i++) {
+                    values += array[i];
+                }
+
+                const average = values / length;
+
+                // Tăng ngưỡng phát hiện tiếng thổi
+                const blowThreshold = 50; // Bạn có thể điều chỉnh giá trị này
+
+                // Nếu phát hiện tiếng thổi (âm lượng cao)
+                if (average > blowThreshold) {
                     blowOutCandle();
-                    cake.removeEventListener('click', blowOnClick);
-                });
-                return;
-            }
+                    
+                    // Ngắt kết nối audio
+                    javascriptNode.disconnect();
+                    analyser.disconnect();
+                    microphone.disconnect();
+                    if (audioContext.state !== 'closed') {
+                        audioContext.close();
+                    }
+                    
+                    // Đóng stream
+                    stream.getTracks().forEach(track => track.stop());
+                }
+            };
+        })
+        .catch(err => {
+            console.log('Không thể truy cập micro: ' + err);
+            // Nếu không thể truy cập micro, cho phép nhấp để thổi nến
+            cake.addEventListener('click', function blowOnClick() {
+                blowOutCandle();
+                cake.removeEventListener('click', blowOnClick);
+            });
+        });
+}
+
             
             // Yêu cầu quyền truy cập micro
             navigator.mediaDevices.getUserMedia({ audio: true })
