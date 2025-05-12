@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gửi Người Yêu ❤️</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FF3CAC;
+            --secondary: #784BA0;
+            --tertiary: #2B86C5;
+            --dark: #121212;
+            --light: #ffffff;
+            --accent: #00F5A0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 100%;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 10%, rgba(255, 60, 172, 0.3), transparent 70%),
+                        radial-gradient(circle at 80% 90%, rgba(0, 245, 160, 0.3), transparent 50%);
+            z-index: 1;
+        }
+        
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=');
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.3;
+        }
+        
+        .content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            padding: 0 1rem;
+        }
+        
+        .cake-emoji {
+            font-size: 5rem;
+            margin: 1.5rem 0;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .cake-emoji::after {
+            content: "Thổi nến 🌬️";
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .cake-emoji:hover::after {
+            opacity: 1;
+        }
+        
+        .cake-candle {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            transition: opacity 0.5s ease;
+        }
+        
+        .cake-candle.blown {
+            opacity: 0;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .countdown {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 1rem 0;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        
+        /* Phong bì thư */
+        .envelope {
+            width: 85%;
+            max-width: 300px;
+            aspect-ratio: 1.6/1;
+            background: linear-gradient(135deg, #FF416C, #FF4B2B);
+            position: relative;
+            margin: 2rem auto;
+            border-radius: 10px;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .envelope:hover {
+            transform: translateY(-5px);
+        }
+        
+        .envelope-front {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FF416C, #FF4B2B);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            transform-origin: top;
+            transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .envelope-front::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            transform: translateZ(10px);
+        }
+        
+        .envelope-front i {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .envelope-inside {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FF416C, #FF4B2B);
+            border-radius: 10px;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .letter {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateY(20px);
+            width: 90%;
+            height: 90%;
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            color: #333;
+            font-size: 1rem;
+            line-height: 1.5;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0.1s;
+            z-index: 0;
+            overflow-y: auto;
+        }
+        
+        .letter p {
+            margin-bottom: 1rem;
+        }
+        
+        .letter-signature {
+            font-family: cursive;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            text-align: right;
+            color: var(--primary);
+        }
+        
+        .envelope.open .envelope-front {
+            transform: rotateX(180deg);
+        }
+        
+        .envelope.open .letter {
+            transform: translate(-50%, -50%) translateY(-10px);
+        }
+        
+        /* Nút phát nhạc */
+        .music-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 100;
+            border: none;
+        }
+        
+        .music-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Hiệu ứng emoji rain */
+        .emoji-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+        
+        .emoji {
+            position: absolute;
+            font-size: 1.5rem;
+            pointer-events: none;
+            user-select: none;
+            animation: emojiRain 5s linear forwards;
+        }
+        
+        @keyframes emojiRain {
+            0% {
+                transform: translateY(-50px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(calc(100vh + 50px)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Hiệu ứng nhịp tim cho biểu tượng trái tim */
+        .heart-beat {
+            display: inline-block;
+            animation: heartBeat 1.5s infinite;
+            color: var(--primary);
+        }
+        
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+        
+        /* Hiệu ứng visualizer nhạc */
+        .music-visualizer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 3px;
+            z-index: 3;
+            padding-bottom: 10px;
+        }
+        
+        .bar {
+            width: 3px;
+            height: 3px;
+            background: linear-gradient(to top, var(--primary), var(--accent));
+            border-radius: 3px;
+            transition: height 0.2s ease;
+        }
+        
+        .playing .bar {
+            animation: equalize 1s infinite;
+        }
+        
+        @keyframes equalize {
+            0%, 100% { height: calc(3px + (var(--i) * 2px)); }
+            50% { height: calc(20px - (var(--i) * 1px)); }
+        }
+        
+        /* Modal ước nguyện */
+        .wish-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .wish-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .wish-modal-content {
+            width: 90%;
+            max-width: 350px;
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .wish-modal.active .wish-modal-content {
+            transform: scale(1);
+        }
+        
+        .wish-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .wish-modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .wish-modal-input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 1rem;
+            resize: none;
+            height: 120px;
+        }
+        
+        .wish-modal-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .wish-modal-btn {
+            padding: 1rem;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .wish-modal-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .wish-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .wish-modal-close:hover {
+            color: white;
+        }
+        
+        /* Hiệu ứng thổi */
+        .blow-instruction {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.5rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .blow-instruction.active {
+            opacity: 1;
+        }
+        
+        /* Hiệu ứng khói */
+        .smoke {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 60;
+            animation: smoke 2s forwards;
+        }
+        
+        @keyframes smoke {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(var(--tx), calc(-50px + var(--ty))) scale(3);
+                opacity: 0;
+            }
+        }
+        
+        /* Hiệu ứng nến tắt */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .candle-light {
+            animation: flicker 0.5s infinite alternate;
+            color: #FFD700;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="noise"></div>
+    
+    <div class="container">
+        <div class="content">
+            <h1>Chúc Mừng Sinh Nhật <span class="heart-beat">❤️</span></h1>
+            <div class="cake-emoji" id="cake">
+                🎂
+                <div class="cake-candle" id="candle">
+                    <span class="candle-light">🕯️</span>
+                </div>
+            </div>
+            <div class="blow-instruction" id="blow-instruction">
+                Thổi vào micro để thổi tắt nến 🌬️
+            </div>
+            <div class="countdown" id="countdown"></div>
+            
+            <div class="envelope" id="envelope">
+                <div class="envelope-front">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="enveope-inside"></div>
+                <div class="letter">
+                    <p>Chúc cẩm ly sinh nhật nha!</p>
+                    
+                    <p>Tuổi mới anh chúc Cẩm Ly ngày càng xinh đẹp hén nào là sức khỏe full cây, học giỏi ngoan, may mắn luôn đến, luôn có niềm vui trong cuộc sống, tốt nghiệp nữa.</p>
+                    
+                    <p>Văn 4 rưỡi nên không thể hoa mĩ hơn.</p>
+                    
+                    <p>Kết bài tóm lại Tuấn chúc Cẩm Ly tất cả những điều tốt đẹp nhất luôn đến với Ly.</p>
+                    
+                    <div class="letter-signature">Tuấn <br> Người iu em</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <button class="music-btn" id="music-btn">
+        <i class="fas fa-music"></i>
+    </button>
+    
+    <div class="emoji-rain" id="emoji-rain"></div>
+    
+    <div class="music-visualizer" id="visualizer">
+        <div class="bar" style="--i: 1;"></div>
+        <div class="bar" style="--i: 2;"></div>
+        <div class="bar" style="--i: 3;"></div>
+        <div class="bar" style="--i: 4;"></div>
+        <div class="bar" style="--i: 5;"></div>
+        <div class="bar" style="--i: 6;"></div>
+        <div class="bar" style="--i: 7;"></div>
+        <div class="bar" style="--i: 8;"></div>
+        <div class="bar" style="--i: 9;"></div>
+        <div class="bar" style="--i: 8;"></div>
+        <div class="bar" style="--i: 7;"></div>
+        <div class="bar" style="--i: 6;"></div>
+        <div class="bar" style="--i: 5;"></div>
+        <div class="bar" style="--i: 4;"></div>
+        <div class="bar" style="--i: 3;"></div>
+        <div class="bar" style="--i: 2;"></div>
+        <div class="bar" style="--i: 1;"></div>
+    </div>
+    
+    <!-- Modal ước nguyện -->
+    <div class="wish-modal" id="wish-modal">
+        <div class="wish-modal-content">
+            <button class="wish-modal-close" id="close-wish-modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="wish-modal-title">Hãy gửi ước nguyện của bạn</h3>
+            <div class="wish-modal-form">
+                <textarea class="wish-modal-input" id="wish-input" placeholder="Nhập ước nguyện của bạn..."></textarea>
+                <button class="wish-modal-btn" id="send-wish-btn">Gửi ước nguyện</button>
+            </div>
+        </div>
+    </div>
+    
+    <audio id="birthday-song" loop>
+        <source src="https://null6868.github.io/x/Happy_Birthday_To_You_-_THE_KIBOOME_(getmp3.pro).mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        // Các phần tử DOM
+        const envelope = document.getElementById('envelope');
+        const musicBtn = document.getElementById('music-btn');
+        const birthdaySong = document.getElementById('birthday-song');
+        const visualizer = document.getElementById('visualizer');
+        const countdown = document.getElementById('countdown');
+        const emojiRainContainer = document.getElementById('emoji-rain');
+        const cake = document.getElementById('cake');
+        const candle = document.getElementById('candle');
+        const blowInstruction = document.getElementById('blow-instruction');
+        const wishModal = document.getElementById('wish-modal');
+        const closeWishModal = document.getElementById('close-wish-modal');
+        const wishInput = document.getElementById('wish-input');
+        const sendWishBtn = document.getElementById('send-wish-btn');
+        
+        // Xử lý đếm ngược
+        const targetDate = new Date();
+        targetDate.setDate(targetDate.getDate() + 1); // Đặt ngày sinh nhật (ví dụ: ngày mai)
+        targetDate.setHours(0, 0, 0, 0);
+        
+        function updateCountdown() {
+            const now = new Date();
+            const diff = targetDate - now;
+            
+            if (diff <= 0) {
+                countdown.innerHTML = '🎉 Chúc mừng sinh nhật! 🎉';
+                return;
+            }
+            
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            // countdown.innerHTML = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+        
+        // Xử lý envelope
+        envelope.addEventListener('click', function() {
+            this.classList.toggle('open');
+            
+            if (this.classList.contains('open')) {
+                startEmojiRain();
+                
+                // Bắt đầu phát nhạc nếu chưa phát
+                if (birthdaySong.paused) {
+                    birthdaySong.play().catch(e => console.log('Không thể tự động phát nhạc:', e));
+                    visualizer.classList.add('playing');
+                }
+            }
+        });
+        
+        // Xử lý nút phát nhạc
+        musicBtn.addEventListener('click', function() {
+            if (birthdaySong.paused) {
+                birthdaySong.play();
+                visualizer.classList.add('playing');
+                this.innerHTML = '<i class="fas fa-pause"></i>';
+            } else {
+                birthdaySong.pause();
+                visualizer.classList.remove('playing');
+                this.innerHTML = '<i class="fas fa-music"></i>';
+            }
+        });
+        
+        // Xử lý hiệu ứng emoji rain
+        const emojis = ['🎂', '🎁', '🎈', '🎉', '🎊', '🍰', '🥂', '🎵', '💖', '✨', '🌟'];
+        
+        function startEmojiRain() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    createEmoji();
+                }, i * 150);
+            }
+        }
+        
+        function createEmoji() {
+            const emoji = document.createElement('div');
+            emoji.classList.add('emoji');
+            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            
+            const posX = Math.random() * window.innerWidth;
+            const delay = Math.random() * 2;
+            const duration = Math.random() * 3 + 3;
+            
+            emoji.style.left = `${posX}px`;
+            emoji.style.animationDuration = `${duration}s`;
+            emoji.style.animationDelay = `${delay}s`;
+            
+            emojiRainContainer.appendChild(emoji);
+            
+            setTimeout(() => {
+                emoji.remove();
+            }, (duration + delay) * 1000);
+        }
+        
+        // Cập nhật visualizer
+        function updateVisualizer() {
+            if (visualizer.classList.contains('playing')) {
+                const bars = document.querySelectorAll('.bar');
+                bars.forEach(bar => {
+                    const height = Math.random() * 20 + 3;
+                    bar.style.height = `${height}px`;
+                });
+            }
+            
+            requestAnimationFrame(updateVisualizer);
+        }
+        
+        // Xử lý thổi nến
+        cake.addEventListener('click', function() {
+            showBlowInstructions();
+        });
+        
+        function showBlowInstructions() {
+            blowInstruction.classList.add('active');
+            setupBlowDetection();
+        }
+        
+        function setupBlowDetection() {
+            // Kiểm tra hỗ trợ
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                console.log('Trình duyệt không hỗ trợ getUserMedia');
+                // Nếu không hỗ trợ, cho phép nhấp để thổi nến
+                cake.addEventListener('click', function blowOnClick() {
+                    blowOutCandle();
+                    cake.removeEventListener('click', blowOnClick);
+                });
+                return;
+            }
+            
+            // Yêu cầu quyền truy cập micro
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const analyser = audioContext.createAnalyser();
+                    const microphone = audioContext.createMediaStreamSource(stream);
+                    const javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+                    
+                    analyser.smoothingTimeConstant = 0.8;
+                    analyser.fftSize = 1024;
+                    
+                    microphone.connect(analyser);
+                    analyser.connect(javascriptNode);
+                    javascriptNode.connect(audioContext.destination);
+                    
+                    javascriptNode.onaudioprocess = function() {
+                        const array = new Uint8Array(analyser.frequencyBinCount);
+                        analyser.getByteFrequencyData(array);
+                        let values = 0;
+                        
+                        const length = array.length;
+                        for (let i = 0; i < length; i++) {
+                            values += array[i];
+                        }
+                        
+                        const average = values / length;
+                        
+                        // Nếu phát hiện tiếng thổi (âm lượng cao)
+                        if (average > 70) {
+                            blowOutCandle();
+                            
+                            // Ngắt kết nối audio
+                            javascriptNode.disconnect();
+                            analyser.disconnect();
+                            microphone.disconnect();
+                            if (audioContext.state !== 'closed') {
+                                audioContext.close();
+                            }
+                            
+                            // Đóng stream
+                            stream.getTracks().forEach(track => track.stop());
+                        }
+                    };
+                })
+                .catch(err => {
+                    console.log('Không thể truy cập micro: ' + err);
+                    // Nếu không thể truy cập micro, cho phép nhấp để thổi nến
+                    cake.addEventListener('click', function blowOnClick() {
+                        blowOutCandle();
+                        cake.removeEventListener('click', blowOnClick);
+                    });
+                });
+        }
+        
+        function blowOutCandle() {
+            // Hiệu ứng nến tắt
+            candle.classList.add('blown');
+            blowInstruction.classList.remove('active');
+            
+            // Hiệu ứng khói
+            createSmoke();
+            
+            // Hiện modal ước nguyện
+            setTimeout(() => {
+                wishModal.classList.add('active');
+            }, 1000);
+            
+            // Hiệu ứng mưa emoji
+            startEmojiRain();
+        }
+        
+        function createSmoke() {
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const smoke = document.createElement('div');
+                    smoke.classList.add('smoke');
+                                        // Vị trí ban đầu gần vị trí nến
+                                        const cakeRect = cake.getBoundingClientRect();
+                    const candleTop = cakeRect.top - 15;
+                    const candleLeft = cakeRect.left + cakeRect.width / 2;
+                    
+                    smoke.style.top = `${candleTop}px`;
+                    smoke.style.left = `${candleLeft}px`;
+                    
+                    // Hướng di chuyển ngẫu nhiên
+                    const tx = (Math.random() - 0.5) * 50;
+                    const ty = (Math.random() - 0.5) * 50;
+                    smoke.style.setProperty('--tx', `${tx}px`);
+                    smoke.style.setProperty('--ty', `${ty}px`);
+                    
+                    document.body.appendChild(smoke);
+                    
+                    setTimeout(() => {
+                        smoke.remove();
+                    }, 2000);
+                }, i * 100);
+            }
+        }
+        
+        // Xử lý modal ước nguyện
+        closeWishModal.addEventListener('click', function() {
+            wishModal.classList.remove('active');
+        });
+        
+        sendWishBtn.addEventListener('click', function() {
+            const wishText = wishInput.value.trim();
+            if (wishText) {
+                sendWish(wishText);
+            } else {
+                alert('Vui lòng nhập ước nguyện của bạn!');
+            }
+        });
+        
+        function sendWish(wishText) {
+            // Tạo dữ liệu để gửi
+            const message = `Ước nguyện sinh nhật từ Cẩm Ly: ${wishText}`;
+            
+            // Gửi ước nguyện qua Telegram API
+            const botToken = '7730353105:AAGTxudNfQu71fdGy0M_TFG8VrgKSRjvx0A';
+            const chatId = '6275491768';
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+            
+            // Sử dụng fetch API để gửi dữ liệu
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Thông báo thành công
+                    wishModal.classList.remove('active');
+                    alert('Ước nguyện của bạn đã được gửi! ✨');
+                    startEmojiRain();
+                } else {
+                    throw new Error('Không thể gửi ước nguyện');
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi:', error);
+                alert('Không thể gửi ước nguyện. Vui lòng thử lại sau!');
+            });
+        }
+        
+        // Khởi tạo trang
+        window.addEventListener('load', function() {
+            // Cập nhật visualizer
+            updateVisualizer();
+            
+            // Tự động mưa emoji mỗi 30 giây
+            setInterval(startEmojiRain, 30000);
+            
+            // Đảm bảo nút nhạc hiển thị đúng trạng thái
+            musicBtn.innerHTML = '<i class="fas fa-music"></i>';
+            
+            // Thêm hiệu ứng cho nến
+            const candleLight = document.querySelector('.candle-light');
+            if (candleLight) {
+                candleLight.style.animation = 'flicker 0.5s infinite alternate';
+            }
+        });
+        
+        // Xử lý chạm vào màn hình để kích hoạt âm thanh trên iOS
+        document.addEventListener('touchstart', function() {
+            // Chuẩn bị âm thanh nhưng không phát
+            birthdaySong.load();
+        }, { once: true });
+    </script>
+</body>
+</html>
